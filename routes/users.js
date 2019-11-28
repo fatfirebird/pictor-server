@@ -2,18 +2,26 @@ const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const user = await User.find({
-      login: req.body.login,
-    })
+      login: req.query.login,
+      password: req.query.password,
+    });
+
+    if (!Object.keys(user).length) {
+      res.status(401);
+      res.message('Ошибка авторизации, проверьте правильность внесенных данных');
+      res.json('ввв')
+    }
+
     res.json(user)
   } catch (e) {
     res.json(e)
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const user = new User({
     email: req.body.email,
     login: req.body.login,

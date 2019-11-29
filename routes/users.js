@@ -1,6 +1,8 @@
 const express = require('express');
+const createError = require('http-errors');
 const User = require('../models/User');
 const router = express.Router();
+
 
 router.get('/', async (req, res, next) => {
   try {
@@ -10,29 +12,42 @@ router.get('/', async (req, res, next) => {
     });
 
     if (!Object.keys(user).length) {
-      res.status(401);
-      res.message('Ошибка авторизации, проверьте правильность внесенных данных');
-      res.json('ввв')
+      return next(createError(401, 'User not found'))
     }
-
     res.json(user)
   } catch (e) {
-    res.json(e)
+    return next(e)
   }
-})
+});
 
 router.post('/', async (req, res, next) => {
-  const user = new User({
-    email: req.body.email,
-    login: req.body.login,
-    password: req.body.password,
-  });
+    const email = await User.find({
+      email: req.body.email,
+    });
 
+    if (!!email[0] && email[0].email === req.body.email) {
+      return next(createError(500, 'This email is alredy exists'))
+    }
+
+    const login = await User.find({
+      login: req.body.login,
+    });
+
+    if (!!login[0] && login[0].login === req.body.login) {
+      return next(createError(500, 'This login is alredy exists'))
+    }
+    
   try {
+    const user = new User({
+      email: req.body.email,
+      login: req.body.login,
+      password: req.body.password,
+    });
+
     const savedUser = await user.save();
     res.json(savedUser);
   } catch (e) {
-    res.json(e)
+    return next(e)
   }
 });
 

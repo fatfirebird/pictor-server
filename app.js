@@ -8,19 +8,18 @@ require('dotenv/config');
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
-
-
-app.use('/users', usersRoute);
-app.use('/users', errorHandler);
-
 mongoose.connect(
    process.env.MONGODB_CONNECTION, {
      useNewUrlParser: true,
      useUnifiedTopology: true
    }
 )
+
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use('/users', usersRoute);
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
   res.send('Старт');

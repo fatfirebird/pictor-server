@@ -51,7 +51,7 @@ router.post('/', async (req, res, next) => {
     });
 
     const savedUser = await user.save();
-    res.json({token: token});
+    res.json({ token: token} );
   } catch (e) {
     return next(e)
   }

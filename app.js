@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const usersRoute = require('./routes/users');
+const regRoute = require('./routes/reg');
+const logRoute = require('./routes/log');
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
@@ -17,7 +19,8 @@ mongoose.connect(
 
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use('/reg', regRoute);
+app.use('/log', logRoute);
 app.use('/users', usersRoute);
 app.use(errorHandler);
 

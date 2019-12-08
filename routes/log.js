@@ -17,8 +17,8 @@ router.post('/', async (req, res, next) => {
   const validPassword = await bcrypt.compare(req.body.password, user[0].password);
   if (!validPassword) return next(createError(401, 'Invalid login or password'));
 
-  const token = jwt.sign({ id: user._id }, process.env.SECRET);
-  res.send(token);
+  const token = await jwt.sign({ id: user._id }, process.env.SECRET);
+  res.json({'token': token});
 })
 
 module.exports = router;

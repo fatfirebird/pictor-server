@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const regRoute = require('./routes/reg');
 const logRoute = require('./routes/log');
+const editRoute = require('./routes/edit');
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use('/reg', regRoute);
 app.use('/log', logRoute);
+app.use('/edit', editRoute);
 app.use(errorHandler);
 
 app.get('/', (req, res) => {

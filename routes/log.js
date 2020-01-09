@@ -12,7 +12,7 @@ router.post('/', async (req, res, next) => {
     login: req.body.login,
   });
 
-  if (!user) return next(createError(401, 'Invalid login or password'));
+  if (!user[0]) return next(createError(401, 'Invalid login or password'));
 
   const validPassword = await bcrypt.compare(req.body.password, user[0].password);
   if (!validPassword) return next(createError(401, 'Invalid login or password'));

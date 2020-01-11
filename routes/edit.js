@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
+const decodeJWT = require('../middlewares/decodeJWT');
+
 require('dotenv/config');
 
 const router = express.Router();
@@ -18,7 +20,12 @@ const fileFilter = (req, file, cb) => {
 
 const storage = new GridFsStorage({
   url: process.env.MONGODB_CONNECTION,
-
+  file: (req, res, file) => {
+    console.log(file);
+    return {
+      filename: `${res.locals.login}-${Date().toISOString()}`
+    }
+  }
 });
 
 // const storage = multer.diskStorage({
@@ -38,7 +45,8 @@ const upload = multer({
   }
 });
 
-router.post('/', upload.single('image'), (req, res, next) => {
+router.post('/', decodeJWT, upload.single('image'), (req, res, next) => {
+  console.log(res.locals.login);
   console.log(req.file);
   res.send(req.file);
 });

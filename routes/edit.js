@@ -1,8 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
-const decodeJWT = require('../middlewares/decodeJWT');
-
+const jwt = require('jsonwebtoken');
 require('dotenv/config');
 
 const router = express.Router();
@@ -20,22 +19,14 @@ const fileFilter = (req, file, cb) => {
 
 const storage = new GridFsStorage({
   url: process.env.MONGODB_CONNECTION,
-  file: (req, res, file) => {
-    console.log(file);
+  file: (req, file) => {
+    const decoded = jwt.verify(req.headers.authorization, process.env.SECRET);
+    const login = decoded.login;
     return {
-      filename: `${res.locals.login}-${Date().toISOString()}`
+      filename: `${login}-${Date.now()}`
     }
   }
 });
-
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "./uploads/");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, new Date().toISOString() + file.originalname);
-//   }
-// });
 
 const upload = multer({
   storage: storage,
@@ -45,9 +36,7 @@ const upload = multer({
   }
 });
 
-router.post('/', decodeJWT, upload.single('image'), (req, res, next) => {
-  console.log(res.locals.login);
-  console.log(req.file);
+router.post('/', upload.single('image'), (req, res, next) => {
   res.send(req.file);
 });
 

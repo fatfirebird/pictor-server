@@ -1,5 +1,7 @@
 const express = require('express');
 const multer = require('multer');
+const GridFsStorage = require('multer-gridfs-storage');
+require('dotenv/config');
 
 const router = express.Router();
 
@@ -14,14 +16,19 @@ const fileFilter = (req, file, cb) => {
   return cb(null, false)
 };
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + file.originalname);
-  }
+const storage = new GridFsStorage({
+  url: process.env.MONGODB_CONNECTION,
+
 });
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "./uploads/");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, new Date().toISOString() + file.originalname);
+//   }
+// });
 
 const upload = multer({
   storage: storage,
@@ -33,7 +40,7 @@ const upload = multer({
 
 router.post('/', upload.single('image'), (req, res, next) => {
   console.log(req.file);
-  res.send(req);
+  res.send(req.file);
 });
 
 module.exports = router;

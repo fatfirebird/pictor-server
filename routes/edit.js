@@ -46,7 +46,7 @@ const createFileName = (req, file) => {
   const decoded = jwt.verify(req.headers.authorization, process.env.SECRET);
   const login = decoded.login;
   const fileName = file.originalname;
-  const extension = fileName.slice(fileName.indexOf('.'));
+  const extension = fileName.slice(fileName.lastIndexOf('.'));
   return `${login}-${date}${extension}`;
 }
 

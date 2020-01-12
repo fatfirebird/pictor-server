@@ -4,6 +4,7 @@ const GridFsStorage = require('multer-gridfs-storage');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
+const User = require('../models/User');
 require('dotenv/config');
 
 const router = express.Router();
@@ -59,8 +60,11 @@ const upload = multer({
 
 router.post('/', upload.single('image'), (req, res, next) => {
   const fileName = createFileName(req, req.file);
-  fs.readFile(path.join(__dirname, '../uploads', fileName), 'base64', (err, base64img) => {
+  fs.readFile(path.join(__dirname, '../uploads', fileName), 'base64', async (err, base64img) => {
     const dataUrl = `data:image/jpeg;base64, ${base64img}`
+    const login = (fileName.slice(0, fileName.indexOf('-')));
+    const image = { image: dataUrl, date };
+    const img = await User.updateOne({ login }, { $push: { images: image} });
     res.send(dataUrl)
   });
 });

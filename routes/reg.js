@@ -34,7 +34,7 @@ router.post('/', async (req, res, next) => {
 
     const savedUser = await user.save();
 
-    res.json({user: user._id});
+    res.json({ email: user.email });
   } catch (e) {
     return next(e)
   }

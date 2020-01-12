@@ -8,7 +8,11 @@ const User = require('../models/User');
 require('dotenv/config');
 
 const router = express.Router();
-const date = Date.now();
+let date;
+
+// (function setDate() {
+//   date = Date.now()
+// }())
 
 const fileFilter = (req, file, cb) => {
   if (
@@ -37,12 +41,14 @@ const storage = multer.diskStorage({
     cb(null, "./uploads/");
   },
   filename: (req, file, cb) => {
+    date = Date.now();
     fileName = createFileName(req, file);
     cb(null, fileName);
   }
 });
 
 const createFileName = (req, file) => {
+  console.log(date);
   const decoded = jwt.verify(req.headers.authorization, process.env.SECRET);
   const login = decoded.login;
   const fileName = file.originalname;
@@ -54,11 +60,12 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 20,
+    fileSize: 1024 * 1024 * 16,
   }
 });
 
 router.post('/', upload.single('image'), (req, res, next) => {
+
   const fileName = createFileName(req, req.file);
   fs.readFile(path.join(__dirname, '../uploads', fileName), 'base64', async (err, base64img) => {
     const dataUrl = `data:image/jpeg;base64, ${base64img}`

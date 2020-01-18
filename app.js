@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const regRoute = require('./routes/reg');
 const logRoute = require('./routes/log');
 const editRoute = require('./routes/edit');
+const imgRoute = require('./routes/test');
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
@@ -23,6 +24,7 @@ app.use('/uploads', express.static('uploads'))
 app.use('/reg', regRoute);
 app.use('/log', logRoute);
 app.use('/edit', editRoute);
+app.use('/test',imgRoute);
 app.use(errorHandler);
 
 app.get('/', (req, res) => {

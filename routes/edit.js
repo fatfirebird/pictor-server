@@ -48,7 +48,6 @@ const storage = multer.diskStorage({
 });
 
 const createFileName = (req, file) => {
-  console.log(date);
   const decoded = jwt.verify(req.headers.authorization, process.env.SECRET);
   const login = decoded.login;
   const fileName = file.originalname;
@@ -72,7 +71,7 @@ router.post('/', upload.single('image'), (req, res, next) => {
     const login = (fileName.slice(0, fileName.indexOf('-')));
     const image = { image: dataUrl, date };
     const img = await User.updateOne({ login }, { $push: { images: image} });
-    res.send(dataUrl)
+    res.send(dataUrl);
   });
 });
 

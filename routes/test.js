@@ -6,6 +6,12 @@ const gm = require('gm').subClass({imageMagick: true});
 const MethodMap = new Map();
 const ValuesMap = new Map();
 
+
+MethodMap.set('borderColor', (img, color = 'ffffff') => {
+  img.borderColor('#' + color);
+  return img;
+})
+
 MethodMap.set('borderW', (img, width = 0) => {
   img.border(width, 0)
   return img;
@@ -42,29 +48,173 @@ MethodMap.set('gamma', (img, radius = 0) => {
 })
 
 MethodMap.set('gaussian', (img, radius = 0) => {
-  img.out('-gaussian', radius);
+  img.gaussian(radius);
   return img;
 })
 
+MethodMap.set('paint', (img, radius = 0) => {
+  img.paint(radius);
+  return img;
+})
+
+MethodMap.set('spread', (img, radius = 0) => {
+  img.spread(radius);
+  return img;
+})
+
+MethodMap.set('mode', (img, radius = 0) => {
+  img.mode(radius);
+  return img;
+})
+
+MethodMap.set('implode', (img, radius = 0) => {
+  img.implode(radius);
+  return img;
+})
+
+MethodMap.set('median', (img, radius = 0) => {
+  img.median(radius);
+  return img;
+})
+
+MethodMap.set('sharpenRad', (img, radius = 0) => {
+  img.sharpen(radius, 0);
+  return img;
+})
+
+MethodMap.set('sharpenSig', (img, sigma = 0) => {
+  img.spread(0, sigma);
+  return img;
+})
+
+MethodMap.set('motionRad', (img, radius = 0) => {
+  img.motionBlur(radius, 0, 0);
+  return img;
+})
+
+MethodMap.set('motionSig', (img, sigma = 0) => {
+  img.motionBlur(0, sigma, 0);
+  return img;
+})
+
+MethodMap.set('motionAng', (img, angle = 0) => {
+  img.motionBlur(0, 0, angle);
+  return img;
+})
+
+MethodMap.set('modulateBright', (img, brightness = 0) => {
+  img.modulate(100 + +brightness, 100);
+  return img;
+})
+
+MethodMap.set('modulateSat', (img, saturation = 0) => {
+  img.modulate(100, 100 + +saturation);
+  return img;
+})
+
+MethodMap.set('modulateHue', (img, hue = 0) => {
+  img.modulate(100, 100, 100 + +hue);
+  return img;
+})
+
+MethodMap.set('raiseW', (img, width = 0) => {
+  img.raise(width, 0);
+  return img;
+})
+
+MethodMap.set('raiseH', (img, height = 0) => {
+  img.raise(0, height);
+  return img;
+})
+
+MethodMap.set('shadeAz', (img, azimuth = 0) => {
+  img.shade(azimuth, 0);
+  return img;
+})
+
+MethodMap.set('shadeEl', (img, elevation = 0) => {
+  img.shade(0, elevation);
+  return img;
+})
+
+MethodMap.set('shearX', (img, xDeg = 0) => {
+  img.shear(xDeg, 0);
+  return img;
+})
+
+MethodMap.set('shearY', (img, yDeg = 0) => {
+  img.shear(0, yDeg);
+  return img;
+})
+
+MethodMap.set('colors', (img, value = 0) => {
+  img.colors(value);
+  return img;
+})
+
+MethodMap.set('shaveW', (img, width = 0) => {
+  img.shave(width, 0);
+  return img;
+})
+
+MethodMap.set('shaveH', (img, height = 0) => {
+  img.shave(0, height);
+  return img;
+})
+
+MethodMap.set('swirl', (img, degrees = 0) => {
+  img.swirl(degrees);
+  return img;
+})
+
+MethodMap.set('rotateDeg', (img, degrees = 0) => {
+  img.rotate('transparent', degrees);
+  return img;
+})
+
+MethodMap.set('contrast', (img, value = 0) => {
+  img.contrast(value);
+  return img;
+})
+
+MethodMap.set('contrast', (img, value = 0) => {
+  img.contrast(value);
+  return img;
+})
+
+MethodMap.set('blurRad', (img, radius = 0) => {
+  img.blur(radius, 0);
+  return img;
+})
+
+MethodMap.set('blurSig', (img, sigma = 0) => {
+  img.blur(0, sigma);
+  return img;
+})
 
 const router = express.Router();
 router.get('/', (req, res, next) => {
   const date1 = Date.now(); //бенчмарк
 
-  // const param = Object.keys(req.query)[0];
   const params = Object.keys(req.query);
   const values = Object.values(req.query);
   const image = gm(path.join(__dirname, '../uploads', 'ffb-1578909390187.png'));
 
-  params.map((param, id) => {
-    ValuesMap.set(param, values[id])
-    // console.log(MethodMap.get(param)(image, values[id]));
-  })
+  params.map((param, id) => ValuesMap.set(param, values[id]));
+
+  for (const [param, value] of ValuesMap) {
+    MethodMap.get(param)(image, value);
+    // console.log(MethodMap.get(param)(image, value));
+  }
+
+  image.write(path.join(__dirname, '../uploads', 'ffb-1578909390187-edit.png'), (err) => {
+    const date2 = Date.now() - date1; //бенчмарк
+    console.log(date2); //бенчмарк
+    if (!err) res.json({time: date2}); //мс на операцию на фронте
+  });
+});
 
   // ValuesMap.set(...params, ...values);
-
-
-
   // ValuesMap.forEach((value, param) => {
   //   console.log(MethodMap.get(param)(image, value));
   //   MethodMap.get(param)(image, value)
@@ -75,23 +225,7 @@ router.get('/', (req, res, next) => {
   //     // if (!err) res.json({time: date2}); //мс на операцию на фронте
   //   });
   // });
-  for (const [param, value] of ValuesMap) {
-    MethodMap.get(param)(image, value)
-  }
-  // console.log(MethodMap.get(...params)(image, ...values));
-  // MethodMap.get(...params)(image, ...values)
-  image
-  .write(path.join(__dirname, '../uploads', 'ffb-1578909390187-edit.png'), (err) => {
-    const date2 = Date.now() - date1; //бенчмарк
-    console.log(date2); //бенчмарк
-    if (!err) res.json({time: date2}); //мс на операцию на фронте
-  });
-  // console.log('___________');
 
-
-  // MethodMap.get(param)(image, ...values)
-
-});
 
 module.exports = router;
 

@@ -8,31 +8,39 @@ const ValuesMap = new Map();
 
 MethodMap.set('borderW', (img, width = 0) => {
   let h = ValuesMap.get('borderH');
-  h === undefined ? h = 0 : h
-  console.log(h);
-  img.border(width, h)
-  return img
-})
+  h === undefined ? h = 0 : h;
+  img.border(width, h);
+  return img;
+});
 
 MethodMap.set('borderH', (img, height = 0) => {
   let w = ValuesMap.get('borderW');
-  w === undefined ? w = 0 : w
-  console.log(w);
-  img.border(w, height)
-  return img
-})
+  w === undefined ? w = 0 : w;
+  img.border(w, height);
+  return img;
+});
+
+const router = express.Router();
+router.get('/', (req, res, next) => {
+  const date1 = Date.now(); //бенчмарк
+
+  const param = Object.keys(req.query)[0];
+  const values = Object.values(req.query);
+  ValuesMap.set(param, ...values);
+  const image = gm(path.join(__dirname, '../uploads', 'ffb-1578909390187.png'));
+
+  MethodMap.get(param)(image, ...values);
+  .write(path.join(__dirname, '../uploads', 'ffb-1578909390187-edit.png'), (err) => {
+    const date2 = Date.now() - date1; //бенчмарк
+    console.log(date2); //бенчмарк
+    if (!err) res.json({time: date2}); //мс на операцию на фронте
+  });
+});
+
+module.exports = router;
 
 // borderColor идет до border, иначе не раскрасится
 
-const router = express.Router();
-
-router.get('/', (req, res, next) => {
-  const date1 = Date.now(); //бенчмарк
-  const param = Object.keys(req.query)[0];
-  const values = Object.values(req.query);
-  ValuesMap.set(param, ...values)
-  const image = gm(path.join(__dirname, '../uploads', 'ffb-1578909390187.png'));
-  MethodMap.get(param)(image, ...values)
 
   // .colorize(10, 121, 20) раскрасим
   // .colors(10) указать сколько цветов будет в картинке
@@ -72,22 +80,6 @@ router.get('/', (req, res, next) => {
 
   // .wave(10, 10) //синусовая волна, амплитуда и расстояние
 
-
-
   // cепия не работает как надо!
   // .sepia() //сепия десу
   // .modulate(115, 0, 100).colorize(7, 21, 50)
-
-
-  .write(path.join(__dirname, '../uploads', 'ffb-1578909390187-edit.png'), (err) => {
-    const date2 = Date.now() - date1;
-    console.log(date2);
-    if (!err) res.json({time: date2});
-  })
-});
-
-router.get('/?borderW', (req, res, next) => {
-  console.log(123);
-})
-
-module.exports = router;

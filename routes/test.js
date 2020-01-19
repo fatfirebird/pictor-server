@@ -7,49 +7,27 @@ const MethodMap = new Map();
 const ValuesMap = new Map();
 
 MethodMap.set('borderW', (img, width = 0) => {
-  let h = ValuesMap.get('borderH');
-  h === undefined ? h = 0 : h;
-  // img.out('-border', `${width}x${h}`);
-  img.border(width, h)
+  img.border(width, 0)
   return img;
 });
 
 MethodMap.set('borderH', (img, height = 0) => {
-  let w = ValuesMap.get('borderW');
-  w === undefined ? w = 0 : w;
-  // img.out('-border', `${w}x${height}`);
-  img.border(w, height)
-
+  img.border(0, height)
   return img;
 });
 
 MethodMap.set('red', (img, r = 0) => {
-  let g = ValuesMap.get('green');
-  g === undefined ? g = 0 : g;
-
-  let b = ValuesMap.get('blue');
-  b === undefined ? b = 0 : b;
-  img.colorize(r, g, b);
+  img.colorize(r, 0, 0);
   return img;
 });
 
 MethodMap.set('blue', (img, b = 0) => {
-  let g = ValuesMap.get('green');
-  g === undefined ? g = 0 : g;
-
-  let r = ValuesMap.get('red');
-  r === undefined ? r = 0 : r;
-  img.colorize(r, g, b);
+  img.colorize(0, 0, b);
   return img;
 });
 
 MethodMap.set('green', (img, g = 0) => {
-  let b = ValuesMap.get('blue');
-  b === undefined ? b = 0 : b;
-
-  let r = ValuesMap.get('red');
-  r === undefined ? r = 0 : r;
-  img.colorize(r, g, b);
+  img.colorize(0, g, 0);
   return img;
 });
 
@@ -76,11 +54,14 @@ router.get('/', (req, res, next) => {
   // const param = Object.keys(req.query)[0];
   const params = Object.keys(req.query);
   const values = Object.values(req.query);
+  const image = gm(path.join(__dirname, '../uploads', 'ffb-1578909390187.png'));
 
-  params.map((param, id) => ValuesMap.set(param, values[id]))
+  params.map((param, id) => {
+    ValuesMap.set(param, values[id])
+    // console.log(MethodMap.get(param)(image, values[id]));
+  })
 
   // ValuesMap.set(...params, ...values);
-  const image = gm(path.join(__dirname, '../uploads', 'ffb-1578909390187.png'));
 
 
 
@@ -94,22 +75,12 @@ router.get('/', (req, res, next) => {
   //     // if (!err) res.json({time: date2}); //мс на операцию на фронте
   //   });
   // });
-  for (var [param, value] of ValuesMap) {
-    console.log(param);
-    console.log(MethodMap.get(param)(image, value));
-    // MethodMap.get(param)(image, value)
+  for (const [param, value] of ValuesMap) {
+    MethodMap.get(param)(image, value)
   }
   // console.log(MethodMap.get(...params)(image, ...values));
   // MethodMap.get(...params)(image, ...values)
   image
-  // .out('-colorize', '22, 30, 0')
-  // .out('-gaussian', '5')
-  // .out('-emboss', '3')
-  // .colorize(0, 0, 0)
-  // .gaussian(1)
-  // .emboss(0)
-  // .mode(5)
-  // .implode(-0.5)
   .write(path.join(__dirname, '../uploads', 'ffb-1578909390187-edit.png'), (err) => {
     const date2 = Date.now() - date1; //бенчмарк
     console.log(date2); //бенчмарк

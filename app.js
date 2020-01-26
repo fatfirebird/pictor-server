@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const regRoute = require('./routes/reg');
 const logRoute = require('./routes/log');
-const editRoute = require('./routes/edit');
-const imgRoute = require('./routes/test');
+const uploadRoute = require('./routes/upload');
+const editRoute = require('./routes/edit')
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
@@ -23,8 +23,8 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'))
 app.use('/reg', regRoute);
 app.use('/log', logRoute);
-app.use('/edit', editRoute);
-app.use('/test',imgRoute);
+app.use('/upload', uploadRoute);
+app.use('/edit',editRoute);
 app.use(errorHandler);
 
 app.get('/', (req, res) => {

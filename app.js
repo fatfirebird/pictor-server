@@ -20,7 +20,8 @@ mongoose.connect(
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/uploads', express.static('uploads'))
+app.use('/uploads', express.static('uploads'));
+app.use('/data', express.static('data'));
 app.use('/reg', regRoute);
 app.use('/log', logRoute);
 app.use('/upload', uploadRoute);

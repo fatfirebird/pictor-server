@@ -4,7 +4,6 @@ const path = require('path');
 const gm = require('gm').subClass({imageMagick: true});
 
 const MethodMap = new Map();
-const ValuesMap = new Map();
 
 MethodMap.set('borderColor', (img, color = 'ffffff') => {
   img.borderColor('#' + color);
@@ -197,19 +196,14 @@ router.post('/', (req, res, next) => {
   const name = fileName.slice(0, fileName.indexOf('.'));
   const extension = fileName.slice(fileName.indexOf('.'), fileName.length);
 
-  /* Параметры и значения фильтров */
-  const params = Object.keys(filters);
-  const values = Object.values(filters);
-
   /* Путь к оригинальному и измененному файлам */
   const originalImgPath = imgPath(`${name}${extension}`);
   const editedImgPath = imgPath(`${name}-edit${extension}`);
 
   const image = gm(originalImgPath);
 
-  params.map((param, id) => ValuesMap.set(param, values[id]));
-  for (const [param, value] of ValuesMap) {
-    MethodMap.get(param)(image, value);
+  for (const filter in filters) {
+    MethodMap.get(filter)(image, filters[filter]);
     // console.log(MethodMap.get(param)(image, value));
   }
 
@@ -218,7 +212,7 @@ router.post('/', (req, res, next) => {
     const dataUrl = `data:image/jpeg;base64, ${base64img}`
     const date2 = Date.now() - date1; //бенчмарк
     console.log(date2); //бенчмарк
-    if (!err) res.json({dataUrl, fileName: 'ffb-1578909390187.png'});
+    if (!err) res.json({dataUrl, fileName});
   });
 });
 

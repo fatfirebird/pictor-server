@@ -1,0 +1,423 @@
+{
+  "filters": [{
+    "_id": 1,
+    "values": {
+      "min": 0,
+      "max": 255,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "blue",
+      "description": "Синий"
+    }
+  }, {
+    "_id": 2,
+    "values": {
+      "min": 0,
+      "max": 255,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "red",
+      "description": "Красный"
+    }
+  }, {
+    "_id": 3,
+    "values": {
+      "min": 0,
+      "max": 255,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "green",
+      "description": "Зеленый"
+    }
+  }, {
+    "_id": 4,
+    "values": {
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "borderH",
+      "description": "Высота рамки"
+    }
+  }, {
+    "_id": 5,
+    "values": {
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "borderW",
+      "description": "Ширина рамки"
+    }
+  }, {
+    "_id": 6,
+    "values": {
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "emboss",
+      "description": "Тиснение"
+    }
+  }, {
+    "_id": 7,
+    "values": {
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "gamma",
+      "description": "Гамма"
+    }
+  }, {
+    "_id": 8,
+    "values": {
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "gaussian",
+      "description": "Размытие по Гауссу"
+    }
+  }, {
+    "_id": 9,
+    "values": {
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "paint",
+      "description": "Эффект масляных красок"
+    }
+  }, {
+    "_id": 10,
+    "values": {
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "spread",
+      "description": "Смещение пикселей"
+    }
+  }, {
+    "_id": 11,
+    "values": {
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "mode",
+      "description": "Шум"
+    }
+  }, {
+    "_id": 12,
+    "values": {
+      "min": -5,
+      "max": 5,
+      "step": 0.1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "implode",
+      "description": "Деформация центра"
+    }
+  }, {
+    "_id": 13,
+    "values": {
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "median",
+      "description": "Медианный фильтр"
+    }
+  }, {
+    "_id": 14,
+    "values": {
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "sharpenRad",
+      "description": "Радиус резкости"
+    }
+  }, {
+    "_id": 15,
+    "values": {
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "sharpenSig",
+      "description": "Сигма резкости"
+    }
+  }, {
+    "_id": 16,
+    "values": {
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "motionRad",
+      "description": "Радиус размытия в движение"
+    }
+  }, {
+    "_id": 17,
+    "values": {
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "motionSig",
+      "description": "Сигма размытия в движение"
+    }
+  }, {
+    "_id": 18,
+    "values": {
+      "min": 0,
+      "max": 180,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "motionAng",
+      "description": "Угол размытия в движение"
+    }
+  }, {
+    "_id": 19,
+    "values": {
+      "min": -100,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "modulateBright",
+      "description": "Яркость"
+    }
+  }, {
+    "_id": 20,
+    "values": {
+      "min": -100,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "modulateSat",
+      "description": "Насыщенность"
+    }
+  }, {
+    "_id": 21,
+    "values": {
+      "min": -100,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "modulateHue",
+      "description": "Тон"
+    }
+  }, {
+    "_id": 22,
+    "values": {
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "raiseW",
+      "description": "Ширина псевдо-3д эффекта"
+    }
+  }, {
+    "_id": 23,
+    "values": {
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "raiseH",
+      "description": "Высота псевдо-3д эффекта"
+    }
+  }, {
+    "_id": 24,
+    "values": {
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "shadeAz",
+      "description": "Азимут тени"
+    }
+  }, {
+    "_id": 25,
+    "values": {
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "shadeEl",
+      "description": "Высота тени"
+    }
+  }, {
+    "_id": 26,
+    "values": {
+      "min": 0,
+      "max": 180,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "shearX",
+      "description": "Поворот по оси Х"
+    }
+  }, {
+    "_id": 27,
+    "values": {
+      "min": 0,
+      "max": 180,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "shearY",
+      "description": "Поворот по оси Y"
+    }
+  }, {
+    "_id": 28,
+    "values": {
+      "min": 0,
+      "max": 64,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "colors",
+      "description": "Количество цветов в картинке"
+    }
+  }, {
+    "_id": 29,
+    "values": {
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "shaveW",
+      "description": "Обрезать по ширине"
+    }
+  }, {
+    "_id": 30,
+    "values": {
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "shaveH",
+      "description": "Обрезать по высоте"
+    }
+  }, {
+    "_id": 31,
+    "values": {
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "swirl",
+      "description": "Завихрение"
+    }
+  }, {
+    "_id": 32,
+    "values": {
+      "min": 0,
+      "max": 180,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "rotateDeg",
+      "description": "Поворот"
+    }
+  }, {
+    "_id": 33,
+    "values": {
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "contrast",
+      "description": "Контраст"
+    }
+  }, {
+    "_id": 34,
+    "values": {
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "blurRad",
+      "description": "Радиус блюра"
+    }
+  }, {
+    "_id": 35,
+    "values": {
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 0
+    },
+    "name": {
+      "filter_name": "blurSig",
+      "description": "Сигма блюра"
+    }
+  }]
+}

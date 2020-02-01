@@ -203,8 +203,9 @@ router.post('/', (req, res, next) => {
   const image = gm(originalImgPath);
 
   for (const filter in filters) {
-    MethodMap.get(filter)(image, filters[filter]);
-    // console.log(MethodMap.get(param)(image, value));
+    if (+filters[filter].value !== 0) {
+      MethodMap.get(filters[filter].name)(image, +filters[filter].value);
+    }
   }
 
   image.write(editedImgPath, async (err) => {
@@ -215,19 +216,6 @@ router.post('/', (req, res, next) => {
     if (!err) res.json({dataUrl, fileName});
   });
 });
-
-  // ValuesMap.set(...params, ...values);
-  // ValuesMap.forEach((value, param) => {
-  //   console.log(MethodMap.get(param)(image, value));
-  //   MethodMap.get(param)(image, value)
-  //   .out('-colorize', '22,0,30')
-  //   .write(path.join(__dirname, '../uploads', 'ffb-1578909390187-edit.png'), (err) => {
-  //     const date2 = Date.now() - date1; //бенчмарк
-  //     console.log(date2); //бенчмарк
-  //     // if (!err) res.json({time: date2}); //мс на операцию на фронте
-  //   });
-  // });
-
 
 module.exports = router;
 

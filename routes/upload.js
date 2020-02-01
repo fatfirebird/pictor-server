@@ -53,7 +53,7 @@ router.post('/', upload.single('image'), (req, res, next) => {
     const dataUrl = `data:image/jpeg;base64, ${base64img}`
     const login = (fileName.slice(0, fileName.indexOf('-')));
     const image = { image: dataUrl, date };
-    const img = await User.updateOne({ login }, { $push: { images: image} });
+    // const img = await User.updateOne({ login }, { $push: { images: image} });
     res.json({dataUrl, fileName});
   });
 

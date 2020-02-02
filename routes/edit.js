@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const gm = require('gm').subClass({imageMagick: true});
+const createError = require('http-errors');
 
 const MethodMap = new Map();
 
@@ -185,36 +186,77 @@ MethodMap.set('blurSig', (img, sigma = 0) => {
   return img;
 })
 
+MethodMap.set('negative', (img) => {
+  img.negative();
+  return img;
+})
+
+MethodMap.set('poisson', (img) => {
+  img.noise('poisson');
+  return img;
+})
+
+MethodMap.set('monochrome', (img) => {
+  img.monochrome();
+  return img;
+})
+
+MethodMap.set('gaussian', (img) => {
+  img.noise('gaussian');
+  return img;
+})
+
+MethodMap.set('multiplicative', (img) => {
+  img.noise('multiplicative');
+  return img;
+})
+
+MethodMap.set('impulse', (img) => {
+  img.noise('impulse');
+  return img;
+})
+
+MethodMap.set('laplacian', (img) => {
+  img.noise('laplacian');
+  return img;
+})
+
 const imgPath = file => path.join(__dirname, '../uploads', file);
 
 const router = express.Router();
-router.post('/', (req, res, next) => {
-  const date1 = Date.now(); //бенчмарк
-  const { fileName, filters } = req.body.params;
+router.post('/', async (req, res, next) => {
+  try {
+    const date1 = Date.now(); //бенчмарк
+    const { fileName, filters } = req.body.params;
+    /* Имя и расширение файла */
+    const name = fileName.slice(0, fileName.indexOf('.'));
+    const extension = fileName.slice(fileName.indexOf('.'), fileName.length);
 
-  /* Имя и расширение файла */
-  const name = fileName.slice(0, fileName.indexOf('.'));
-  const extension = fileName.slice(fileName.indexOf('.'), fileName.length);
+    /* Путь к оригинальному и измененному файлам */
+    const originalImgPath = imgPath(`${name}${extension}`);
+    const editedImgPath = imgPath(`${name}-edit${extension}`);
 
-  /* Путь к оригинальному и измененному файлам */
-  const originalImgPath = imgPath(`${name}${extension}`);
-  const editedImgPath = imgPath(`${name}-edit${extension}`);
+    const image = gm(originalImgPath);
 
-  const image = gm(originalImgPath);
-
-  for (const filter in filters) {
-    if (+filters[filter].value !== 0) {
-      MethodMap.get(filters[filter].name)(image, +filters[filter].value);
+    for (const filter in filters) {
+      if (+filters[filter].value !== 0) {
+       await MethodMap.get(filters[filter].name)(image, +filters[filter].value);
+      }
     }
+
+    image.write(editedImgPath, async (err) => {
+      fs.readFile(editedImgPath, 'base64', async (err, base64img) => {
+        const dataUrl = `data:image/jpeg;base64, ${base64img}`
+        const date2 = Date.now() - date1; //бенчмарк
+        console.log(date2); //бенчмарк
+        if (!err) res.json({dataUrl, fileName});
+      })
+
+    });
+  } catch (e) {
+    return next(createError(401, 'Internal server error'))
   }
 
-  image.write(editedImgPath, async (err) => {
-    const base64img = await fs.readFileSync(editedImgPath, 'base64');
-    const dataUrl = `data:image/jpeg;base64, ${base64img}`
-    const date2 = Date.now() - date1; //бенчмарк
-    console.log(date2); //бенчмарк
-    if (!err) res.json({dataUrl, fileName});
-  });
 });
 
 module.exports = router;
@@ -228,10 +270,6 @@ module.exports = router;
   // .shave(100, 80) //обрезает куски по углам изображения, если больше одной из сторон, перестает работать
   // .border(borderW, borderH)
   // .emboss(5) //Тиснение(radius)
-  // // .enhance()
-  // // .equalize() //Выровнять яркость
-  // .flip() //отразить по вертикали
-  // // .flop() //отразить по горизонтали
   // // .gamma(5) //гамма, должно быть 3 аргумента, с 3 оно не меняется
   // // .gaussian(0.4) //размытие по гауссу, сигма, на значениях больших задыхается
   // .implode(-1) //отрицательное взрывает центр, положительное всасывает центр
@@ -241,13 +279,8 @@ module.exports = router;
   // .median(10) //50 это пиздец смажет, медианный фильтр, в фотожопе в шумах есть, называется медиана
   // // .mode(5) //тоже шум какой-то не ебу
   // // .modulate(80, 80, 50) //яркость , насыщенность (0 это -100, 200 это + 100), тон (по кругу каждые 200)
-  // // .monochrome()
   // .motionBlur(40, 10, 90) //радиус, сигма, угол. радиус должен быть > сигмы, если 0, подберется автоматически в зависимости от сигмы
-  // // .negative()
-  // // .noise() //если число - делает шум, похож на медиану, иначе использовать gaussian, multiplicative, impulse, laplacian, poisson
-  // // .normalize() //нормалайзер
   // .paint(1) //симуляция масляных красок, до 10
-  // // .noProfile() //удалить exif
   // // .raise(10, 10) //создать псевдо 3д-эффект по углам, длина и высота
   // // .shade(90, 50) //азимут, наклон от севера, и его младший брат, ЕЛЕВАТИОН, наклон по вертикали, можно ограничить 360 градусами
   // // .sharpen(10, 20) //резкость, радиус и сигма, сигма сильнее влияет
@@ -256,7 +289,16 @@ module.exports = router;
 
   // .trim() убирает бордер
 
+  // // .monochrome()
   // .type('PaletteMatte') //формат, тип изображения, Bilevel Grayscale Palette PaletteMatte TrueColor TrueColor MatteColor SeparationColor SeparationMatte Optimize
+  // .flip() //отразить по вертикали
+  // // .noise() //если число - делает шум, похож на медиану, иначе использовать gaussian, multiplicative, impulse, laplacian, poisson
+  // // .negative()
+  // // .flop() //отразить по горизонтали
+  // // .equalize() //Выровнять яркость
+  // // .enhance()
+  // // .normalize() //нормалайзер
+  // // .noProfile() //удалить exif
 
   // .wave(10, 10) //синусовая волна, амплитуда и расстояние
 

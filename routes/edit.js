@@ -226,8 +226,8 @@ const imgPath = file => path.join(__dirname, '../uploads', file);
 const router = express.Router();
 router.post('/', async (req, res, next) => {
   try {
-    const date1 = Date.now(); //бенчмарк
-    const { fileName, filters } = req.body.params;
+    const { fileName, filters, presets } = req.body.params;
+
     /* Имя и расширение файла */
     const name = fileName.slice(0, fileName.indexOf('.'));
     const extension = fileName.slice(fileName.indexOf('.'), fileName.length);
@@ -238,17 +238,25 @@ router.post('/', async (req, res, next) => {
 
     const image = gm(originalImgPath);
 
-    for (const filter in filters) {
-      if (+filters[filter].value !== 0) {
-       await MethodMap.get(filters[filter].name)(image, +filters[filter].value);
+    if (presets) {
+      for (const preset in presets) {
+        if (+presets[preset].value !== 0) {
+         await MethodMap.get(presets[preset].name)(image);
+        }
+      }
+    }
+
+    if (filters) {
+      for (const filter in filters) {
+        if (+filters[filter].value !== 0) {
+         await MethodMap.get(filters[filter].name)(image, +filters[filter].value);
+        }
       }
     }
 
     image.write(editedImgPath, async (err) => {
       fs.readFile(editedImgPath, 'base64', async (err, base64img) => {
         const dataUrl = `data:image/jpeg;base64, ${base64img}`
-        const date2 = Date.now() - date1; //бенчмарк
-        console.log(date2); //бенчмарк
         if (!err) res.json({dataUrl, fileName});
       })
 
@@ -260,48 +268,3 @@ router.post('/', async (req, res, next) => {
 });
 
 module.exports = router;
-
-// borderColor идет до border, иначе не раскрасится
-
-
-  // .colorize(10, 121, 20) раскрасим
-  // .colors(10) указать сколько цветов будет в картинке
-  // .borderColor('red')
-  // .shave(100, 80) //обрезает куски по углам изображения, если больше одной из сторон, перестает работать
-  // .border(borderW, borderH)
-  // .emboss(5) //Тиснение(radius)
-  // // .gamma(5) //гамма, должно быть 3 аргумента, с 3 оно не меняется
-  // // .gaussian(0.4) //размытие по гауссу, сигма, на значениях больших задыхается
-  // .implode(-1) //отрицательное взрывает центр, положительное всасывает центр
-  // // .level('50%', null) //уровни, точка черного, гамма, точка белого,
-  // // работает через жопу, точка черного до 50%, точка белого сосет,
-  // // гамма не работает вообще. В доках должно указываться до 255, контраст от 0 до 5
-  // .median(10) //50 это пиздец смажет, медианный фильтр, в фотожопе в шумах есть, называется медиана
-  // // .mode(5) //тоже шум какой-то не ебу
-  // // .modulate(80, 80, 50) //яркость , насыщенность (0 это -100, 200 это + 100), тон (по кругу каждые 200)
-  // .motionBlur(40, 10, 90) //радиус, сигма, угол. радиус должен быть > сигмы, если 0, подберется автоматически в зависимости от сигмы
-  // .paint(1) //симуляция масляных красок, до 10
-  // // .raise(10, 10) //создать псевдо 3д-эффект по углам, длина и высота
-  // // .shade(90, 50) //азимут, наклон от севера, и его младший брат, ЕЛЕВАТИОН, наклон по вертикали, можно ограничить 360 градусами
-  // // .sharpen(10, 20) //резкость, радиус и сигма, сигма сильнее влияет
-  // // .shear(10, 80) //cтранно крутит картинку в 3д
-  // .spread(2) //смещает пиксели рандомно, можно добиться эффекта бутылки
-
-  // .trim() убирает бордер
-
-  // // .monochrome()
-  // .type('PaletteMatte') //формат, тип изображения, Bilevel Grayscale Palette PaletteMatte TrueColor TrueColor MatteColor SeparationColor SeparationMatte Optimize
-  // .flip() //отразить по вертикали
-  // // .noise() //если число - делает шум, похож на медиану, иначе использовать gaussian, multiplicative, impulse, laplacian, poisson
-  // // .negative()
-  // // .flop() //отразить по горизонтали
-  // // .equalize() //Выровнять яркость
-  // // .enhance()
-  // // .normalize() //нормалайзер
-  // // .noProfile() //удалить exif
-
-  // .wave(10, 10) //синусовая волна, амплитуда и расстояние
-
-  // cепия не работает как надо!
-  // .sepia() //сепия десу
-  // .modulate(115, 0, 100).colorize(7, 21, 50)

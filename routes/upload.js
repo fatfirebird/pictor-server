@@ -43,11 +43,11 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 16,
+    fileSize: 1024 * 1024 * 4,
   }
 });
 
-router.post('/', upload.single('image'), (req, res, next) => {
+router.post('/', upload.single('image'), async (req, res, next) => {
   const fileName = createFileName(req, req.file);
   fs.readFile(path.join(__dirname, '../uploads', fileName), 'base64', async (err, base64img) => {
     const dataUrl = `data:image/jpeg;base64, ${base64img}`

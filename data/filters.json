@@ -3,7 +3,7 @@
     "_id": 1,
     "values": {
       "min": 0,
-      "max": 255,
+      "max": 100,
       "step": 1,
       "default": 0
     },
@@ -15,7 +15,7 @@
     "_id": 2,
     "values": {
       "min": 0,
-      "max": 255,
+      "max": 100,
       "step": 1,
       "default": 0
     },
@@ -27,7 +27,7 @@
     "_id": 3,
     "values": {
       "min": 0,
-      "max": 255,
+      "max": 100,
       "step": 1,
       "default": 0
     },

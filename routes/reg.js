@@ -11,7 +11,7 @@ router.post('/', async (req, res, next) => {
   });
 
   if (!!email[0] && email[0].email === req.body.email) {
-    return next(createError(401, 'This email is alredy exists'))
+    return next(createError(401, 'This email is already exists'))
   }
 
   const login = await User.find({
@@ -19,7 +19,7 @@ router.post('/', async (req, res, next) => {
   });
 
   if (!!login[0] && login[0].login === req.body.login) {
-    return next(createError(401, 'This login is alredy exists'))
+    return next(createError(401, 'This login is already exists'))
   }
 
   const salt = await bcrypt.genSalt(10);

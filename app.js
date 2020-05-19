@@ -7,6 +7,7 @@ const editRoute = require('./routes/edit')
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
+const path = require('path');
 require('dotenv/config');
 
 const app = express();
@@ -16,8 +17,10 @@ mongoose.connect(
      useNewUrlParser: true,
      useUnifiedTopology: true
    }
-)
+);
 
+const PORT = process.env.port || 8000;
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(cors());
 app.use(bodyParser.json());
 app.use('/uploads', express.static('uploads'));
@@ -27,9 +30,8 @@ app.use('/log', logRoute);
 app.use('/upload', uploadRoute);
 app.use('/edit',editRoute);
 app.use(errorHandler);
-
-app.get('/', (req, res) => {
-  res.send('Старт');
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
-app.listen(8000);
+app.listen(PORT);

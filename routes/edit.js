@@ -227,7 +227,7 @@ const router = express.Router();
 router.post('/', async (req, res, next) => {
   try {
     const { fileName, filters, presets } = req.body.params;
-
+    console.log(filters);
     /* Имя и расширение файла */
     const name = fileName.slice(0, fileName.indexOf('.'));
     const extension = fileName.slice(fileName.indexOf('.'), fileName.length);

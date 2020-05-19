@@ -12,4 +12,5 @@ custom-build
 client
 .idea/
 uploads/
-
+.vercel
+.nowignore

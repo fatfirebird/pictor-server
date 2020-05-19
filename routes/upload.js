@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
 const User = require('../models/User');
-require('dotenv/config');
+require('dotenv').config({path: __dirname + '/.env'})
 
 const router = express.Router();
 let date;

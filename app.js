@@ -13,7 +13,7 @@ require('dotenv').config({path: __dirname + '/.env'})
 const app = express();
 
 mongoose.connect(
-   process.env["MONGODB_CONNECTION"],
+   process.env.MONGODB_CONNECTION,
     {
      useNewUrlParser: true,
      useUnifiedTopology: true

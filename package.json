@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cd client; npm run build",
+    "build": "cd client && npm run build",
     "start": "node app.js",
     "client-install": "cd client; npm install && npm install",
     "heroku-postbuild": "npm run client-install && npm run build",

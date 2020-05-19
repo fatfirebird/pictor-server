@@ -8,15 +8,16 @@ const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const cors = require('cors');
 const path = require('path');
-require('dotenv/config');
+require('dotenv').config({path: __dirname + '/.env'})
 
 const app = express();
 
 mongoose.connect(
-   process.env.MONGODB_CONNECTION, {
+   process.env["MONGODB_CONNECTION"],
+    {
      useNewUrlParser: true,
      useUnifiedTopology: true
-   }
+    }
 );
 
 const PORT = process.env.port || 8000;
